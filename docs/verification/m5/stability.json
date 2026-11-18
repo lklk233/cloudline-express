@@ -1,0 +1,532 @@
+{
+  "adaptive": {
+    "ceiling": 1,
+    "lowered": 0.85,
+    "recovered": 1
+  },
+  "browser": "157.0.4341.60",
+  "cycles": [
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 79,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.965749502949755,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 142,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999738153,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 203,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.965749999985775,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 267,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.965749999999936,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 331,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999997,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 393,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.965749999999986,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 455,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 519,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 583,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 646,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 709,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    },
+    {
+      "geometries": 18,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 73,
+      "frames": 771,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    }
+  ],
+  "resizes": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "geometries": 20,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 81,
+      "frames": 772,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.96574999999999,
+        15.24,
+        73
+      ],
+      "rotation": [
+        -0.06191144832353808,
+        0.1311543608014972,
+        0.00820700966436121,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.7777777777777777,
+      "progress": "0%"
+    },
+    {
+      "width": 760,
+      "height": 720,
+      "geometries": 19,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 77,
+      "frames": 863,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        760,
+        720
+      ],
+      "dpr": 1,
+      "eye": [
+        -30.744955557304184,
+        19.686576000284777,
+        107.1684261074515
+      ],
+      "rotation": [
+        -0.06191144832353805,
+        0.13115436080149717,
+        0.008207009664361203,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.0555555555555556,
+      "progress": "0%"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "geometries": 19,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 77,
+      "frames": 955,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        390,
+        844
+      ],
+      "dpr": 1,
+      "eye": [
+        6.371534604239548,
+        37.58539105280587,
+        244.70668914261353
+      ],
+      "rotation": [
+        -0.06191144832353807,
+        0.1311543608014972,
+        0.008207009664361208,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 0.46208530805687204,
+      "progress": "0%"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "geometries": 23,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 93,
+      "frames": 1046,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        844,
+        390
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.91558075453208,
+        15.264193290961689,
+        73.18590634107404
+      ],
+      "rotation": [
+        -0.06191144832353807,
+        0.13115436080149712,
+        0.008207009664361203,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 2.164102564102564,
+      "progress": "0%"
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "geometries": 23,
+      "textures": 6,
+      "programs": 9,
+      "buffers": 93,
+      "frames": 1097,
+      "contextLost": false,
+      "losses": 0,
+      "buffer": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "eye": [
+        -39.964654892864644,
+        15.240528097349534,
+        73.00405801121222
+      ],
+      "rotation": [
+        -0.06191144832353807,
+        0.13115436080149717,
+        0.008207009664361204,
+        0.9893928194613106
+      ],
+      "fov": 35,
+      "aspect": 1.6,
+      "progress": "0%"
+    }
+  ],
+  "playChecks": [
+    {
+      "stopped": "0.1%",
+      "cloudOnlyFrames": 22,
+      "idleFrames": 0
+    },
+    {
+      "stopped": "0.2%",
+      "cloudOnlyFrames": 22,
+      "idleFrames": 0
+    },
+    {
+      "stopped": "0.3%",
+      "cloudOnlyFrames": 22,
+      "idleFrames": 0
+    },
+    {
+      "stopped": "0.4%",
+      "cloudOnlyFrames": 22,
+      "idleFrames": 0
+    },
+    {
+      "stopped": "0.5%",
+      "cloudOnlyFrames": 23,
+      "idleFrames": 0
+    }
+  ],
+  "models": [
+    200,
+    200,
+    200
+  ],
+  "errors": [],
+  "contextLosses": 0
+}
