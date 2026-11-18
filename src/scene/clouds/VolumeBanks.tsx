@@ -1,29 +1,31 @@
-import {useEffect,useMemo} from 'react'
-import {useLoader} from '@react-three/fiber'
-import {BoxGeometry,Data3DTexture,FileLoader,LinearFilter,RedFormat,Vector2} from 'three'
+import {useEffect,useMemo,useRef} from 'react'
+import {useFrame,useLoader} from '@react-three/fiber'
+import {Mesh,BoxGeometry,Data3DTexture,FileLoader,LinearFilter,RedFormat,Vector2} from 'three'
 import {gunzipSync} from 'three/examples/jsm/libs/fflate.module.js'
 import brickUrl from '../../../assets/runtime/cloud-density.bin?url'
 import {paletteGLSL,usePalette} from '../Palette'
 import {useScene} from '../store'
-import {bankCount,cloudModelCount,createBackdropBanks,createBanks,createLowerBanks,safeHeight,worldPosition} from './layout'
+import {beltLength,courseVariation,bankCount,cloudModelCount,createBackdropBanks,createBanks,createLowerBanks,safeHeight,worldPosition} from './layout'
 
 const box=new BoxGeometry(2,2,2)
 const vertex=`
 uniform vec2 travel;
-varying vec3 entry,eye,localLight;
+varying vec3 entry,eye,localLight; varying float beltFade;
 void main(){
   vec3 drift=vec3(sin(travel.x*.085),0.,sin(travel.y*.085))*4.;
   mat4 inv=inverse(modelMatrix);
   eye=(inv*vec4(cameraPosition-drift,1.)).xyz;
   localLight=normalize(mat3(inv)*vec3(-.50,.58,-.86));
+  beltFade=1.-smoothstep(166.,216.,abs(modelMatrix[3].x-(${headLocalX.toFixed(3)})));
   entry=position;
   gl_Position=projectionMatrix*viewMatrix*(modelMatrix*vec4(position,1.)+vec4(drift,0.));
 }`
 const fragment=paletteGLSL+`
 precision highp sampler3D;
+uniform mat4 modelMatrix;
 uniform sampler3D bricks;
-uniform float shadow,sun,softness; uniform bool lowerDeck;
-varying vec3 entry,eye,localLight;
+uniform float shadow,sun,softness; uniform bool lowerDeck,backgroundBank;
+varying vec3 entry,eye,localLight; varying float beltFade;
 float field(vec3 p){
   return texture(bricks,clamp(p*.5+.5,0.,1.)).r;
 }
@@ -52,17 +54,24 @@ void main(){
     light=mix(light,mix(rim,sunlight,.28),smoothstep(.66,.78,direct));
     light=mix(mix(cloud,mist,.38),light,lowerDeck?.72:.80);
     if(lowerDeck) light=mix(light,cloud,.19*smoothstep(.32,.85,direct));
+    float level=lowerDeck?smoothstep(-28.,-2.,(modelMatrix*vec4(p,1.)).y):top;
+    float shade=.55+.52*direct;
+    if(lowerDeck) light=paint_lower(light,level,shade);
+    else if(backgroundBank) light=paint_backdrop(light,level,shade);
+    else light=paint_bank(light,level,shade);
     color+=transmission*cover*light;
     transmission*=1.-cover;
     if(transmission<.018)break;
   }
   float alpha=1.-transmission;
   if(alpha<.008)discard;
-  gl_FragColor=vec4(color/alpha,alpha);
+  gl_FragColor=vec4(color/alpha,alpha*beltFade);
   #include <colorspace_fragment>
 }`
 
-export function VolumeBanks({travel}:{travel:{value:Vector2}}){
+import {headLocalX,repeatPosition,type Motion} from '../train/track'
+export function VolumeBanks({travel,motion}:{motion:React.RefObject<Motion>,travel:{value:Vector2}}){
+  const meshes=useRef<(Mesh|null)[]>([])
   const s=useScene()
   const palette=usePalette()
   const bytes=useLoader(FileLoader,brickUrl,loader=>loader.setResponseType('arraybuffer')) as ArrayBuffer
@@ -83,21 +92,37 @@ export function VolumeBanks({travel}:{travel:{value:Vector2}}){
   const backdrop=useMemo(()=>createBackdropBanks(s.cloudSeed),[s.cloudSeed])
   const lower=useMemo(()=>createLowerBanks(s.cloudSeed),[s.cloudSeed])
   const defs=useMemo(()=>({STEPS:s.cloudQuality==='high'?72:36}),[s.cloudQuality])
-  const uniforms=useMemo(()=>[false,true].flatMap(lowerDeck=>bricks.map(texture=>({...palette,travel,bricks:{value:texture},lowerDeck:{value:lowerDeck},
-    sun:{value:s.sunIntensity},shadow:{value:s.cloudShadowStrength},softness:{value:s.cloudEdgeSoftness}}))),
+  const uniforms=useMemo(()=>[0,1,2].flatMap(group=>bricks.map(texture=>({...palette,travel,bricks:{value:texture},lowerDeck:{value:group===2},
+    backgroundBank:{value:group===1},sun:{value:s.sunIntensity},shadow:{value:s.cloudShadowStrength},softness:{value:s.cloudEdgeSoftness}}))),
     [palette,travel,bricks,s.sunIntensity,s.cloudShadowStrength,s.cloudEdgeSoftness])
   const count=bankCount(s.cloudDensity,s.cloudQuality)
   const lowerCount=Math.round(lower.length*s.cloudDensity*(s.cloudQuality==='low'?.66:1))
   const upper=[...banks.slice(0,count),...backdrop.slice(0,Math.round(count/8))]
-  return <>{[...upper,...lower.filter((_,i)=>((i*17)%lower.length)<lowerCount)].map((b,i)=>{
+  const active=[...upper,...lower.filter((_,i)=>((i*17)%lower.length)<lowerCount)]
+  useFrame(()=>{
+    active.forEach((b,i)=>{
+      const mesh=meshes.current[i]
+      if(mesh){
+        const along=b.x-headLocalX-motion.current.distance
+        const course=-Math.floor((along+beltLength/2)/beltLength)
+        if(mesh.userData.course!==course || mesh.userData.bank!==b){
+          mesh.userData.course=course
+          mesh.userData.bank=b
+          mesh.rotation.y=b.yaw+courseVariation(s.cloudSeed,i,course)*1.4
+        }
+        mesh.position.x=headLocalX+repeatPosition(b.x-headLocalX,motion.current.distance,beltLength)
+      }
+    })
+  },-1)
+  return <>{active.map((b,i)=>{
     const scale=i<upper.length?s.cloudScale:s.lowerCloudScale
     const [x,z]=worldPosition(b.x,b.z)
     const rx=b.rx*scale,ry=b.ry*scale,rz=b.rz*scale
     const reach=Math.hypot(rx,rz)
     const y=safeHeight(b.x,b.z,b.y+s.cloudHeight+(i>=upper.length?s.lowerCloudHeight:0),reach,ry,reach)
-    return <mesh key={i} geometry={box} position={[x,y,z]} scale={[rx,ry,rz]} rotation-y={b.yaw} frustumCulled={false}>
+    return <mesh key={i} ref={node=>{meshes.current[i]=node}} geometry={box} position={[x,y,z]} scale={[rx,ry,rz]} rotation-y={b.yaw} frustumCulled={false}>
       <shaderMaterial key={s.cloudQuality} defines={defs} vertexShader={vertex} fragmentShader={fragment}
-        uniforms={uniforms[b.variant+(i<upper.length?0:cloudModelCount)]} transparent depthWrite={false} toneMapped={false}/>
+        uniforms={uniforms[b.variant+(i<count?0:i<upper.length?cloudModelCount:2*cloudModelCount)]} transparent depthWrite={false} toneMapped={false}/>
     </mesh>
   })}</>
 }

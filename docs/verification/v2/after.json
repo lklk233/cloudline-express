@@ -1,0 +1,71 @@
+{
+  "phase": "after",
+  "browser": "157.0.4341.60",
+  "platform": "win32 10.0.26200",
+  "cpu": "Intel(R) Core(TM) i9-14900HX",
+  "samples": [
+    {
+      "profile": "desktop-high",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "quality": "high",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Laptop GPU (0x000028E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "buffer": [
+        1920,
+        1080
+      ],
+      "renderDpr": 1,
+      "frames": 721,
+      "elapsedMs": 11999,
+      "fps": 60,
+      "p95ms": 17.6,
+      "triangles": 286030,
+      "drawCalls": 81,
+      "progress": "69.4 单位",
+      "errors": []
+    },
+    {
+      "profile": "desktop-low",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "quality": "low",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Laptop GPU (0x000028E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "buffer": [
+        1728,
+        972
+      ],
+      "renderDpr": 0.9,
+      "frames": 720,
+      "elapsedMs": 11982,
+      "fps": 60.01,
+      "p95ms": 17.4,
+      "triangles": 285472,
+      "drawCalls": 57,
+      "progress": "69.3 单位",
+      "errors": []
+    },
+    {
+      "profile": "mobile-low",
+      "width": 390,
+      "height": 844,
+      "dpr": 3,
+      "quality": "low",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Laptop GPU (0x000028E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "buffer": [
+        390,
+        844
+      ],
+      "renderDpr": 1,
+      "frames": 720,
+      "elapsedMs": 11983,
+      "fps": 60,
+      "p95ms": 17.4,
+      "triangles": 254317,
+      "drawCalls": 55,
+      "progress": "69.3 单位",
+      "errors": []
+    }
+  ]
+}

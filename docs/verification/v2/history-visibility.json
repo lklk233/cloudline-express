@@ -1,0 +1,18 @@
+{
+  "before": {
+    "visibility": "visible",
+    "distance": 2.1
+  },
+  "hidden": {
+    "visibility": "hidden",
+    "distance": 2.2
+  },
+  "held": {
+    "visibility": "visible",
+    "distance": 2.2
+  },
+  "resumed": {
+    "visibility": "visible",
+    "distance": 8.1
+  }
+}

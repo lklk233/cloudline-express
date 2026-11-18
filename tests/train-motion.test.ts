@@ -1,6 +1,6 @@
 import {expect,it} from 'vitest'
 import {Vector3} from 'three'
-import {atDeparture,departure,stepTrain,terminus,track,TrackPath,vehicles} from '../src/scene/train/track'
+import {atDeparture,departure,stepTrain,repeatPosition,track,TrackPath,vehicles} from '../src/scene/train/track'
 import {calibration as c} from '../src/config/calibration'
 
 it('samples individual body positions by arc length across unequal segments',()=>{
@@ -11,7 +11,7 @@ it('samples individual body positions by arc length across unequal segments',()=
 })
 it('keeps the entire consist on the rails with calibrated coupler gaps',()=>{
   const p=new Vector3(),t=new Vector3()
-  for(const head of [departure,(departure+terminus)/2,terminus]){
+  for(const head of [departure,track.length/2,track.length-8]){
     let rear=Infinity
     for(const {kind,offset} of vehicles){
       track.sample(head-offset,p,t)
@@ -25,23 +25,16 @@ it('keeps the entire consist on the rails with calibrated coupler gaps',()=>{
     }
   }
 })
-it.each([.5,4,12])('travels at %s units/s, brakes progressively and remains stopped',setting=>{
+it.each([.5,4,12])('cruises continuously at %s units/s across 10,000 spans',setting=>{
   const m=atDeparture()
-  let cruise=false,braking=false
-  for(let i=0;i<40000 && m.distance<terminus;i++){
-    const before={...m}
-    const dt=[.016,.025,.044,.1][i%4]
-    stepTrain(m,dt,setting,true)
-    expect(m.distance).toBeGreaterThanOrEqual(before.distance)
-    expect(m.distance).toBeLessThanOrEqual(terminus)
-    expect(m.speed).toBeLessThanOrEqual(setting)
-    if(m.speed===setting)cruise=true
-    if(m.speed<before.speed && m.speed>0)braking=true
-    if(before.speed===setting && m.speed===setting)expect(m.distance-before.distance).toBeCloseTo(setting*dt)
-  }
-  expect(cruise && braking).toBe(true)
-  expect(m).toEqual({distance:terminus,speed:0})
-  stepTrain(m,.2,12,true);expect(m.distance).toBe(terminus)
+  for(let i=0;i<20;i++)stepTrain(m,.25,setting,true)
+  expect(m.speed).toBe(setting)
+  const start=m.distance
+  const steps=Math.ceil(10000*c.span/(.25*setting))
+  for(let i=0;i<steps;i++)stepTrain(m,.25,setting,true)
+  expect(m.speed).toBe(setting)
+  expect(m.distance-start).toBeCloseTo(steps*.25*setting,6)
+  expect(repeatPosition(0,m.distance,49*c.span)).toBeLessThan(49*c.span/2)
 })
 it('holds position on pause or speed zero and resumes from the same point',()=>{
   const m=atDeparture()
@@ -50,5 +43,15 @@ it('holds position on pause or speed zero and resumes from the same point',()=>{
   stepTrain(m,4,8,false);expect(m).toEqual({distance:d,speed:0})
   stepTrain(m,.1,0,true);expect(m.distance).toBe(d)
   stepTrain(m,.1,4,true);expect(m.distance).toBeGreaterThan(d)
-  expect(atDeparture()).toEqual({distance:departure,speed:0})
+  expect(atDeparture()).toEqual({distance:0,speed:0})
+})
+
+it('keeps each pooled bridge one span apart across wrap and after a long trip',()=>{
+  const span=c.span
+  const slots=49
+  for(const distance of [0,span-.001,span,span+.001,span*slots/2,span*10000+.1,1e9+.1]){
+    const points=Array.from({length:slots},(_,i)=>repeatPosition((i-24)*span,distance,slots*span)).sort((a,b)=>a-b)
+    for(let i=1;i<points.length;i++)expect(points[i]-points[i-1]).toBeCloseTo(span,6)
+    expect(Math.max(...points.map(Math.abs))).toBeLessThanOrEqual(slots*span/2)
+  }
 })

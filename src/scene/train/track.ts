@@ -28,22 +28,20 @@ export const vehicles=consist.map(({kind,x})=>({kind,offset:calibration.headX-x}
 const tail=vehicles[vehicles.length-1]
 const clearance=1
 export const departure=tail.offset+calibration.dimensionsXYZ[tail.kind][0]/2+clearance
-export const terminus=track.length-calibration.dimensionsXYZ.locomotive[0]/2-clearance
+// Render in the train's moving frame so camera damping never crosses an origin jump.
+export const headLocalX=calibration.trackPoints[0][0]+departure
 export interface Motion {distance:number;speed:number}
-export const atDeparture=():Motion=>({distance:departure,speed:0})
-
-const acceleration=3.0, brake=2.4
+export const atDeparture=():Motion=>({distance:0,speed:0})
+export function repeatPosition(x:number,distance:number,period:number){
+  return x-distance-period*Math.floor((x-distance+period/2)/period)
+}
 export function stepTrain(m:Motion,dt:number,setting:number,running:boolean){
   const target=Math.min(12,Math.max(0,setting))
-  if(!running || target===0 || m.distance>=terminus){m.speed=0;return}
+  if(!running || target===0){m.speed=0;return}
   const time=Math.min(.25,Math.max(0,dt))
-  if(time===0)return
-  const remaining=terminus-m.distance
-  // End this step with enough distance to brake continuously at the configured rate.
-  const half=brake*time/2
-  const safeSpeed=Math.max(0,Math.sqrt(Math.max(0,half*half+2*brake*remaining-brake*time*m.speed))-half)
-  const next=Math.min(safeSpeed,Math.max(m.speed-brake*time,Math.min(target,m.speed+acceleration*time)))
-  m.distance=Math.min(terminus,m.distance+(m.speed+next)*time/2)
+  const rate=target>=m.speed?3:2.4
+  const ramp=Math.min(time,Math.abs(target-m.speed)/rate)
+  const next=m.speed+Math.sign(target-m.speed)*rate*ramp
+  m.distance+=(m.speed+next)*ramp/2+target*(time-ramp)
   m.speed=next
-  if(terminus-m.distance<.001){m.distance=terminus;m.speed=0}
 }

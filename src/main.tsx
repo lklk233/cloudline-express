@@ -17,7 +17,12 @@ function ScenePage() {
   const view = useView()
   const [dpr,setDpr]=useState(()=>renderBudget(view.cloudQuality,innerWidth<=760,devicePixelRatio).max)
   const readout=useRef<HTMLSpanElement>(null)
-  const onProgress=useCallback((fraction:number)=>{if(readout.current)readout.current.textContent=Number((fraction*100).toFixed(1))+"%"},[])
+  const panelDistance=useRef<HTMLSpanElement>(null)
+  const onDistance=useCallback((distance:number)=>{
+    const text=distance.toFixed(1)+' 单位'
+    if(readout.current)readout.current.textContent=text
+    if(panelDistance.current)panelDistance.current.textContent=text
+  },[])
   const [status, setStatus] = useState<Record<ModelKind,ModelStatus>>({locomotive:'加载中',carriage:'加载中',bridge:'加载中'})
   const report = useCallback((kind: ModelKind, value: ModelStatus) =>
     setStatus(previous => previous[kind] === value ? previous : {...previous,[kind]:value}), [])
@@ -26,15 +31,15 @@ function ScenePage() {
   return <main className="scene-page">
     <div className="viewport" style={{filter:`saturate(${view.saturation})`}}><ErrorBoundary fallback={fallback}>
       <Canvas frameloop="demand" dpr={dpr} camera={{near:.15,far:1200}} fallback={fallback} gl={{antialias:true,alpha:false}}>
-        <World onDpr={setDpr} visible={view.visible} debug={view.debug} ready={kinds.every(k=>status[k]!=='加载中')} onProgress={onProgress} report={report}/>
+        <World onDpr={setDpr} visible={view.visible} debug={view.debug} ready={kinds.every(k=>status[k]!=='加载中')} onDistance={onDistance} report={report}/>
       </Canvas>
     </ErrorBoundary></div>
     <header className="mast" hidden={view.uiHidden}><div>CLOUDLINE EXPRESS</div><h1>云间列车</h1></header>
     <footer className="scene-footer" hidden={view.uiHidden}><div className="caption">
       <span>{scenePresets[view.visualPreset].name}</span>
-      <small>{view.inspection==='rail'?'轮轨校准':view.inspection==='cloud'?'云团侧视':shots[view.shot]} · <span className="distance" ref={readout}>0%</span></small>
+      <small>{view.inspection==='rail'?'轮轨校准':view.inspection==='cloud'?'云团侧视':shots[view.shot]} · <span className="distance" ref={readout}>0.0 单位</span></small>
     </div></footer>
-    <ControlPanel>
+    <ControlPanel distanceRef={panelDistance}>
     {import.meta.env.DEV && <details className="group inspector"><summary>场景校准</summary><div className="group-body">
       <label>观察位置<select aria-label="观察位置" value={view.inspection ?? ""} onChange={e=>useView.setState({inspection:(e.target.value || null) as Inspection})}>
         <option value="">当前镜头</option><option value="cloud">侧看云团</option><option value="rail">轮轨近景</option>

@@ -23,6 +23,9 @@ void main() {
   vec3 gradient = mix(lower,horizon,smoothstep(-.42,.015,h));
   gradient = mix(gradient,sky,smoothstep(.006,.145,h));
   gradient = mix(gradient,sky*.65,smoothstep(.15,.45,h));
+  gradient=paint_skyBand(gradient,smoothstep(.006,.145,h),1.);
+  float haze=1.-smoothstep(.003,.045,abs(h-.006));
+  gradient=mix(gradient,paint_vista(gradient,haze,1.),haze);
   float angle = distance(d,sunDirection);
   gradient = mix(gradient,sunlight,min(1.,.80*intensity)*exp(-angle*angle*15.));
   gradient += intensity*sunlight*.28*exp(-angle*angle*200.);

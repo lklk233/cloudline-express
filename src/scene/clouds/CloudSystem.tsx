@@ -3,14 +3,28 @@ import {renderBudget} from '../renderBudget'
 import {CloudBasin} from './CloudBasin'
 import {Suspense,useMemo,useRef} from 'react'
 import {useFrame,useThree} from '@react-three/fiber'
-import {BackSide,DoubleSide,Vector2} from 'three'
+import {Mesh,BackSide,DoubleSide,Vector2} from 'three'
 import {useScene} from '../store'
-import {advance,randomFrom,trackFrame,worldPosition,type Clock} from './layout'
+import {advance,beltLength,courseVariation,randomFrom,trackFrame,worldPosition,type Clock} from './layout'
 import {farVertex,farFragment,mistVertex,mistFragment} from './shaders'
 
 import {VolumeBanks} from './VolumeBanks'
 
-export function CloudSystem() {
+import {headLocalX,repeatPosition,type Motion} from '../train/track'
+export function CloudSystem({motion}:{motion:React.RefObject<Motion>}) {
+  const railTravel=useMemo(()=>({value:0}),[])
+  const sheets=useRef<(Mesh|null)[]>([])
+  useFrame(()=>{
+    // The repeating 32-voxel noise and all four octave frequencies have a common period.
+    railTravel.value=motion.current.distance%(640/.066*s.lowerCloudScale)
+    sheets.current.forEach((mesh,i)=>{
+      if(!mesh)return
+      const along=mesh.userData.along-headLocalX
+      const course=-Math.floor((along-motion.current.distance+beltLength/2)/beltLength)
+      mesh.position.x=headLocalX+repeatPosition(along,motion.current.distance,beltLength)
+      mesh.rotation.y=(i%3-1)*.19+courseVariation(s.cloudSeed,i,course)*.4
+    })
+  },-1)
   const s=useScene()
   const palette=usePalette()
   const defines=useMemo(()=>s.cloudQuality==='low'?{CLOUD_LOW:1}:{},[s.cloudQuality])
@@ -42,13 +56,13 @@ export function CloudSystem() {
         }} vertexShader={farVertex} fragmentShader={farFragment} toneMapped={false}/>
       </mesh>
     })}
-    <CloudBasin travel={travel} seed={phases[0]}/>
-    <Suspense fallback={null}><VolumeBanks travel={travel}/></Suspense>
+    <CloudBasin railTravel={railTravel} travel={travel} seed={phases[0]}/>
+    <Suspense fallback={null}><VolumeBanks motion={motion} travel={travel}/></Suspense>
     {Array.from({length:budget.mist},(_,i)=>{
       const lateral=i%2===0?6+i*1.5:-6-i*2.1
       const [x,z]=worldPosition((phases[i]%102)-51,lateral)
       const y=Math.min(f.railY-1.4,-6+(i%3)+s.cloudHeight+s.lowerCloudHeight)
-      return <mesh key={i} position={[x,y-2.2,z]} rotation={[-.45,(i%3-1)*.19,0]} visible={s.fogStrength>0}>
+      return <mesh key={i} ref={node=>{sheets.current[i]=node}} userData={{along:x}} position={[x,y-2.2,z]} rotation={[-.45,(i%3-1)*.19,0]} visible={s.fogStrength>0}>
         <planeGeometry args={[42+i%4*8,4.2]}/>
         <shaderMaterial key={s.cloudQuality} defines={defines} side={DoubleSide} depthWrite={false} transparent uniforms={{
           ...palette,mistTime:mistClock,strength:{value:s.fogStrength},seed:{value:phases[i+4]},

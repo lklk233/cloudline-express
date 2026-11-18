@@ -1,3 +1,4 @@
+import {headLocalX} from '../train/track'
 import {paletteGLSL} from '../Palette'
 export const cloudNoise = `
 float hash(vec2 p) {
@@ -44,23 +45,24 @@ void main(){
   c=mix(c,rose,smoothstep(6.,9.,strata));
   c=mix(c,shadowColor,.70*smoothstep(15.,27.,strata));
   c=mix(c,mist,.10+.16*(1.-layer/8.));
+  c=paint_backdrop(c,1.-smoothstep(0.,32.,dist),.65+.35*(1.-smoothstep(0.,24.,strata)));
   gl_FragColor=vec4(c,alpha);
   #include <colorspace_fragment>
 }`
 export const mistVertex=`
-varying vec2 tex;
-void main(){tex=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}
+varying vec2 tex; varying float beltFade;
+void main(){beltFade=1.-smoothstep(166.,216.,abs(modelMatrix[3].x-(${headLocalX.toFixed(3)})));tex=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}
 `
 export const mistFragment=paletteGLSL+cloudNoise+`
-varying vec2 tex;
+varying vec2 tex; varying float beltFade;
 uniform vec2 mistTime; uniform float strength,seed;
 void main(){
   vec2 uv=tex*2.-1.;
   float fade=1.-smoothstep(.36,1.,length(uv));
   float n=fb(vec2(uv.x*3.8-mistTime.x*.17,uv.y*2.+mistTime.x*.045)+seed);
-  float alpha=fade*smoothstep(.23,.82,n)*strength*.83;
+  float alpha=beltFade*fade*smoothstep(.23,.82,n)*strength*.83;
   if(alpha<.003)discard;
-  gl_FragColor=vec4(mix(cloud,mist,n),alpha);
+  gl_FragColor=vec4(paint_lower(mix(cloud,mist,n),tex.y,.8+.2*n),alpha);
   #include <colorspace_fragment>
 }`
 

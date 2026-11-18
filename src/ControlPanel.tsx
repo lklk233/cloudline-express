@@ -1,9 +1,10 @@
-import {useEffect,useRef,type ReactNode} from 'react'
+import {useEffect,useRef,type RefObject,type ReactNode} from 'react'
 import {CloudControls,SceneSlider,Slider} from './CloudControls'
 import {TransportControls} from './TransportControls'
 import {scenePresets,presetIds} from './config/scenePresets'
 import {factoryReset,resetPreset,selectPreset,useScene} from './scene/store'
-export function ControlPanel({children}:{children:ReactNode}){
+import {ColorControls} from './ColorControls'
+export function ControlPanel({children,distanceRef}:{children:ReactNode,distanceRef:RefObject<HTMLSpanElement|null>}){
   const s=useScene()
   const toggleRef=useRef<HTMLButtonElement>(null)
   const closeRef=useRef<HTMLButtonElement>(null)
@@ -25,9 +26,9 @@ export function ControlPanel({children}:{children:ReactNode}){
       <div className="panel-scroll">
         <section className="group"><h3>视觉预设 <small>PALETTE</small></h3><div className="presets">
           {presetIds.map(id=>{const p=scenePresets[id];return <button key={id} aria-pressed={s.visualPreset===id} onClick={()=>selectPreset(id)}>
-            <i aria-hidden="true" style={{background:`linear-gradient(163deg,${p.sky},${p.horizon} 51%,${p.cloud} 54%,${p.shadow})`}}/>{p.name}</button>})}
-        </div></section>
-        <TransportControls/>
+            <i aria-hidden="true" style={{background:`linear-gradient(163deg,${p.sky},${p.horizon} 51%,${p.cloud} 54%,${p.shadow})`}}/>{p.name}{Object.keys(s.overrides[id]??{}).length>0&&<small> · 已自定义</small>}</button>})}
+        </div><ColorControls/></section>
+        <TransportControls distanceRef={distanceRef}/>
         <section className="group"><h3>光影 <small>ATMOSPHERE</small></h3><div className="group-body">
           <SceneSlider setting="sunIntensity"/><Slider label="饱和度" value={s.saturation} min={.5} max={1.6} step={.01} onChange={v=>useScene.setState({saturation:v})}/>
           <SceneSlider setting="fogStrength"/>

@@ -1,0 +1,29 @@
+{
+  "coral": {
+    "shape": [
+      720,
+      1280,
+      3
+    ],
+    "meanAbsoluteRGBDifference": 0.6214,
+    "pixelsWithin5Percent": 99.23
+  },
+  "orange": {
+    "shape": [
+      720,
+      1280,
+      3
+    ],
+    "meanAbsoluteRGBDifference": 0.6685,
+    "pixelsWithin5Percent": 99.21
+  },
+  "violet": {
+    "shape": [
+      720,
+      1280,
+      3
+    ],
+    "meanAbsoluteRGBDifference": 0.5743,
+    "pixelsWithin5Percent": 99.25
+  }
+}

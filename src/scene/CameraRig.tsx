@@ -1,14 +1,14 @@
-import {useEffect,useMemo,useRef,type RefObject} from 'react'
+import {useEffect,useMemo,useRef} from 'react'
 import {useFrame,useThree} from '@react-three/fiber'
 import {PerspectiveCamera,Vector3} from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-import {track,vehicles,type Motion} from './train/track'
+import {departure,track,vehicles} from './train/track'
 import {useScene} from './store'
 
 const cruise=[
   [-22,10,42,40],[12,6,28,43],[30,17,50,36],[-8,21,60,34],
 ]
-export function CameraRig({motion}:{motion:RefObject<Motion>}){
+export function CameraRig(){
   const {camera,gl,size,invalidate}=useThree()
   const {shot,inspection,reducedMotion}=useScene()
   useEffect(()=>{invalidate()},[invalidate,shot,inspection,reducedMotion,size.width,size.height])
@@ -54,7 +54,7 @@ export function CameraRig({motion}:{motion:RefObject<Motion>}){
     if(!(camera instanceof PerspectiveCamera))return
     const dt=Math.min(.12,delta)
     const {head,direction,side,focus,eye,look,offset}=space
-    track.sample(motion.current.distance,head,direction)
+    track.sample(departure,head,direction)
     side.set(-direction.z,0,direction.x).normalize()
     const fit=Math.max(1,1.55/(size.width/size.height))
     focus.copy(head).addScaledVector(direction,-vehicles[2].offset/2)

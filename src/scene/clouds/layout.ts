@@ -22,6 +22,13 @@ export function randomFrom(seed:number) {
     return ((h^(h>>>14))>>>0)/4294967296
   }
 }
+// One reusable belt around the consist. Fade out at both boundaries before a slot changes course.
+export const beltLength=448
+export function courseVariation(seed:number,slot:number,course:number){
+  if(course===0)return 0
+  const value=Math.imul(course,0x45d9f3b)^Math.imul(slot+1,0x27d4eb2d)^seed
+  return randomFrom(value)()-.5
+}
 export const cloudModelCount=16
 export const capacity={high:38,low:24}
 export function createBackdropBanks(seed:number){
@@ -90,7 +97,7 @@ export const driftLimit=4
 export function safeHeight(along:number,lateral:number,desired:number,rx:number,ry:number,rz:number) {
   const f=trackFrame, margin=driftLimit*Math.SQRT2
   const radius=Math.max(rx,rz)+margin
-  const nearTrack=Math.abs(along)<f.length/2+radius && Math.abs(lateral)<f.halfClear+radius
+  const nearTrack=Math.abs(lateral)<f.halfClear+radius
   // On the viewing side, retain a sightline to the wheels even at maximum cloud height.
   const ceiling=nearTrack ? f.railY-2.0 : lateral>0 ? f.railY-1.4 : Infinity
   return Math.min(desired,ceiling-ry)

@@ -1,0 +1,125 @@
+{
+  "browser": "157.0.4341.60",
+  "pixelsPerFrame": 230400,
+  "results": [
+    {
+      "quality": "high",
+      "id": "basin",
+      "changedSolid": 25482,
+      "changedGradient": 22524,
+      "changedSwap": 23054,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "high",
+      "id": "bank",
+      "changedSolid": 53396,
+      "changedGradient": 50632,
+      "changedSwap": 52101,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "high",
+      "id": "backdrop",
+      "changedSolid": 29244,
+      "changedGradient": 27536,
+      "changedSwap": 27741,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "high",
+      "id": "lower",
+      "changedSolid": 63459,
+      "changedGradient": 61348,
+      "changedSwap": 57940,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "high",
+      "id": "skyBand",
+      "changedSolid": 59628,
+      "changedGradient": 57120,
+      "changedSwap": 57673,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "high",
+      "id": "vista",
+      "changedSolid": 25654,
+      "changedGradient": 17294,
+      "changedSwap": 24338,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "basin",
+      "changedSolid": 35755,
+      "changedGradient": 30505,
+      "changedSwap": 33140,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "bank",
+      "changedSolid": 45960,
+      "changedGradient": 43344,
+      "changedSwap": 44822,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "backdrop",
+      "changedSolid": 30218,
+      "changedGradient": 28502,
+      "changedSwap": 28635,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "lower",
+      "changedSolid": 56994,
+      "changedGradient": 55985,
+      "changedSwap": 52275,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "skyBand",
+      "changedSolid": 59628,
+      "changedGradient": 57129,
+      "changedSwap": 57656,
+      "changedEqual": 0,
+      "changedReset": 0
+    },
+    {
+      "quality": "low",
+      "id": "vista",
+      "changedSolid": 25887,
+      "changedGradient": 17458,
+      "changedSwap": 24613,
+      "changedEqual": 0,
+      "changedReset": 0
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "256-keyboard",
+    "hex-persistence",
+    "per-preset-reset",
+    "four-camera-crossings",
+    "pause-resume",
+    "zero-speed",
+    "simulated-page-visibility",
+    "mobile-editor"
+  ]
+}

@@ -15,6 +15,7 @@ precision highp sampler3D;
 uniform sampler3D weather;
 uniform mat4 projectionMatrix;
 uniform vec2 travel;
+uniform float railTravel;
 uniform float seed,shadow,sun,density,scale;
 varying vec3 world;
 float noise3(vec3 p){return texture(weather,p/32.).r;}
@@ -31,7 +32,7 @@ void main(){
   vec3 ray=normalize(world-cameraPosition);
   if(ray.y>=-.006)discard;
   float stride=min(24./-ray.y,190.)/float(STEPS);
-  vec3 p=vec3((world.xz-4.*sin(travel*.085))/scale,0.).xzy;
+  vec3 p=vec3((world.xz+vec2(railTravel,0.)-4.*sin(travel*.085))/scale,0.).xzy;
   p+=vec3(seed*.23,8.,seed*.11);
   p+=ray*stride*.5;
   vec3 color=vec3(0.);
@@ -49,6 +50,7 @@ void main(){
     vec3 coral=mix(cloud,mist,.38);
     vec3 crest=mix(rim,cloud,.26);
     vec3 light=mix(mix(shade,coral,smoothstep(.09,.56,lit)),crest,smoothstep(.48,.91,lit));
+    light=paint_basin(light,skylight,.55+.52*lit);
     float opacity=1.-exp(-rho*stride*.65);
     depthSum+=trans*opacity*(float(i)+.5)*stride;
     color+=trans*opacity*light;
@@ -61,11 +63,11 @@ void main(){
   vec4 clip=projectionMatrix*viewMatrix*vec4(world+ray*(depthSum/alpha)*scale,1.);
   gl_FragDepth=clip.z/clip.w*.5+.5;
   float horizonFade=1.-smoothstep(145.,250.,distance(cameraPosition,world));
-  gl_FragColor=vec4(mix(color/alpha,mist,haze),alpha*horizonFade*smoothstep(0.,.22,density));
+  gl_FragColor=vec4(mix(color/alpha,paint_vista(mist,haze,1.),haze),alpha*horizonFade*smoothstep(0.,.22,density));
   #include <colorspace_fragment>
 }`
 
-export function CloudBasin({travel,seed}:{travel:{value:Vector2},seed:number}){
+export function CloudBasin({travel,seed,railTravel}:{railTravel:{value:number},travel:{value:Vector2},seed:number}){
   const s=useScene()
   const palette=usePalette()
   const weather=useMemo(()=>{
@@ -79,9 +81,9 @@ export function CloudBasin({travel,seed}:{travel:{value:Vector2},seed:number}){
     return texture
   },[])
   useEffect(()=>()=>weather.dispose(),[weather])
-  const uniforms=useMemo(()=>({...palette,travel,weather:{value:weather},seed:{value:seed},
+  const uniforms=useMemo(()=>({...palette,travel,railTravel,weather:{value:weather},seed:{value:seed},
     scale:{value:s.lowerCloudScale},shadow:{value:s.cloudShadowStrength},sun:{value:s.sunIntensity},density:{value:s.cloudDensity}}),
-    [palette,travel,weather,seed,s.lowerCloudScale,s.cloudShadowStrength,s.sunIntensity,s.cloudDensity])
+    [palette,travel,railTravel,weather,seed,s.lowerCloudScale,s.cloudShadowStrength,s.sunIntensity,s.cloudDensity])
   const top=trackFrame.railY+Math.min(-2.1,-6.4+s.cloudHeight+s.lowerCloudHeight)
   return <mesh position={[trackFrame.x,top,trackFrame.z]} rotation-x={-Math.PI/2} renderOrder={-1}>
     <planeGeometry args={[620,560]}/>
